@@ -23,6 +23,7 @@ include(":shared")
 val sharedOnly = providers.gradleProperty("aether.sharedOnly").orNull.toBoolean()
 if (!sharedOnly) {
     include(":app")
+    include(":baselineprofile")
     include(":terminal-emulator")
     include(":terminal-view")
 

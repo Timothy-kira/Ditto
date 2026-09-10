@@ -69,5 +69,9 @@ pi-bridge/session-*.jsonl
 # Device diagnostic pulls — real chat DBs, crash logs, session payloads
 /_diag_pull/
 
-# Research / diagnostic write-ups — local only
-/docs/
+# Research / diagnostic write-ups — local only. The exception is the README's
+# own screenshots and clips: ignoring those would ship a README full of broken
+# images. Note /docs/* rather than /docs/ — the directory form stops git
+# descending at all, which would make the negation below unreachable.
+/docs/*
+!/docs/assets/

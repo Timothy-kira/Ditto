@@ -1,0 +1,8 @@
+# Keep the iOS host out of the language stats. AGENTS.md states this project
+# targets Android only; the Xcode project and the iOS source set are carried
+# along, not worked on, so they should not colour the repo's language bar.
+# The files stay in the tree — GitHub has no way to hide them — but they are
+# excluded from language detection and collapsed by default in diffs.
+iosApp/** linguist-vendored=true
+shared/src/iosMain/** linguist-vendored=true
+shared/src/iosTest/** linguist-vendored=true

@@ -152,3 +152,8 @@ adb -s <serial> install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
 多设备环境请务必带 `-s <serial>`。更多约定见 [AGENTS.md](AGENTS.md)。
+
+## 致谢
+
+- **[Kimi Code CLI](https://www.npmjs.com/package/@moonshot-ai/kimi-code)**（Moonshot AI）—— 本应用的 agent 内核，Alpine 用户态里运行的就是官方 CLI 本体，本仓库不含也不修改其推理逻辑。
+- **[Aether 扶摇](https://github.com/Zhou-Shilin/Aether)**（Zhou-Shilin）—— 本仓库 fork 自该项目，Android 端的 Alpine/proot 运行时、ACP 桥接与整体应用骨架均源于此。

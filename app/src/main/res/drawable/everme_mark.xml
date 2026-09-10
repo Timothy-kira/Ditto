@@ -1,0 +1,48 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="42dp"
+    android:height="42dp"
+    android:viewportWidth="42"
+    android:viewportHeight="42">
+    <!-- Official EverMe mark captured from https://everme.evermind.ai/ -->
+    <path
+        android:fillColor="#FF231F15"
+        android:pathData="M7.7773,14.9333C7.7773,9.7062 7.7773,7.0926 8.7946,5.0961C9.6894,3.3399 11.1173,1.9121 12.8734,1.0173C14.8699,0 17.4835,0 22.7107,0H27.0662C32.2934,0 34.907,0 36.9035,1.0173C38.6597,1.9121 40.0875,3.3399 40.9823,5.0961C41.9996,7.0926 41.9996,9.7062 41.9996,14.9333V19.2889C41.9996,24.516 41.9996,27.1296 40.9823,29.1261C40.0875,30.8823 38.6597,32.3101 36.9035,33.205C34.907,34.2222 32.2934,34.2222 27.0662,34.2222H22.7107C17.4835,34.2222 14.8699,34.2222 12.8734,33.205C11.1173,32.3101 9.6894,30.8823 8.7946,29.1261C7.7773,27.1296 7.7773,24.516 7.7773,19.2889V14.9333Z" />
+    <path android:pathData="M9.3333,4.6667H28C33.1547,4.6667 37.3333,8.8453 37.3333,14V32.6667C37.3333,37.8214 33.1547,42 28,42H9.3333C4.1787,42 0,37.8214 0,32.6667V14C0,8.8453 4.1787,4.6667 9.3333,4.6667Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="18.6667"
+                android:endY="42"
+                android:startX="18.6667"
+                android:startY="4.6667"
+                android:type="linear">
+                <item android:color="#FFFFE785" android:offset="0" />
+                <item android:color="#FFFFCE5C" android:offset="1" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M11.1497,31.014C14.7719,33.2252 22.9293,31.4603 27.9209,26.4654"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="2.1152" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M26.4452,18.6667L26.4453,19.9117"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="3.1728" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M17.1411,21.7778L16.1867,24.8849C15.9288,25.7245 16.7474,26.4944 17.5696,26.1855L19.7851,25.3533"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="2.1152" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M10.8887,18.6665C10.8887,19.4443 10.8887,19.333 10.8887,20.1108"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:strokeWidth="3.1728" />
+</vector>

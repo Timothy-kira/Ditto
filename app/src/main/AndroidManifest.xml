@@ -1,36 +1,344 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission
+        android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission
+        android:name="android.permission.CAPTURE_AUDIO_OUTPUT"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission
+        android:name="android.permission.NEARBY_WIFI_DEVICES"
+        android:usesPermissionFlags="neverForLocation"
+        tools:targetApi="31" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <uses-permission android:name="com.termux.permission.RUN_COMMAND" />
     <uses-permission android:name="moe.shizuku.manager.permission.API_V23" />
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.READ_CALENDAR" />
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
+    <uses-permission android:name="com.huawei.authentication.HW_ACCESS_AUTH_SERVICE" />
+
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.WRITE_ACTIVE_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.READ_DISTANCE" />
+    <uses-permission android:name="android.permission.health.WRITE_DISTANCE" />
+    <uses-permission android:name="android.permission.health.READ_ELEVATION_GAINED" />
+    <uses-permission android:name="android.permission.health.WRITE_ELEVATION_GAINED" />
+    <uses-permission android:name="android.permission.health.READ_EXERCISE" />
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE" />
+    <uses-permission android:name="android.permission.health.READ_EXERCISE_ROUTES" />
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE_ROUTE" />
+    <uses-permission android:name="android.permission.health.READ_FLOORS_CLIMBED" />
+    <uses-permission android:name="android.permission.health.WRITE_FLOORS_CLIMBED" />
+    <uses-permission android:name="android.permission.health.READ_STEPS" />
+    <uses-permission android:name="android.permission.health.WRITE_STEPS" />
+    <uses-permission android:name="android.permission.health.READ_STEPS_CADENCE" />
+    <uses-permission android:name="android.permission.health.WRITE_STEPS_CADENCE" />
+    <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.WRITE_TOTAL_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.READ_VO2_MAX" />
+    <uses-permission android:name="android.permission.health.WRITE_VO2_MAX" />
+    <uses-permission android:name="android.permission.health.READ_WHEELCHAIR_PUSHES" />
+    <uses-permission android:name="android.permission.health.WRITE_WHEELCHAIR_PUSHES" />
+    <uses-permission android:name="android.permission.health.READ_POWER" />
+    <uses-permission android:name="android.permission.health.WRITE_POWER" />
+    <uses-permission android:name="android.permission.health.READ_SPEED" />
+    <uses-permission android:name="android.permission.health.WRITE_SPEED" />
+    <uses-permission android:name="android.permission.health.READ_BODY_FAT" />
+    <uses-permission android:name="android.permission.health.WRITE_BODY_FAT" />
+    <uses-permission android:name="android.permission.health.READ_BODY_TEMPERATURE" />
+    <uses-permission android:name="android.permission.health.WRITE_BODY_TEMPERATURE" />
+    <uses-permission android:name="android.permission.health.READ_BONE_MASS" />
+    <uses-permission android:name="android.permission.health.WRITE_BONE_MASS" />
+    <uses-permission android:name="android.permission.health.READ_HEIGHT" />
+    <uses-permission android:name="android.permission.health.WRITE_HEIGHT" />
+    <uses-permission android:name="android.permission.health.READ_LEAN_BODY_MASS" />
+    <uses-permission android:name="android.permission.health.WRITE_LEAN_BODY_MASS" />
+    <uses-permission android:name="android.permission.health.READ_WEIGHT" />
+    <uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
+    <uses-permission android:name="android.permission.health.READ_BASAL_METABOLIC_RATE" />
+    <uses-permission android:name="android.permission.health.WRITE_BASAL_METABOLIC_RATE" />
+    <uses-permission android:name="android.permission.health.READ_BLOOD_GLUCOSE" />
+    <uses-permission android:name="android.permission.health.WRITE_BLOOD_GLUCOSE" />
+    <uses-permission android:name="android.permission.health.READ_BLOOD_PRESSURE" />
+    <uses-permission android:name="android.permission.health.WRITE_BLOOD_PRESSURE" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE_VARIABILITY" />
+    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE_VARIABILITY" />
+    <uses-permission android:name="android.permission.health.READ_OXYGEN_SATURATION" />
+    <uses-permission android:name="android.permission.health.WRITE_OXYGEN_SATURATION" />
+    <uses-permission android:name="android.permission.health.READ_RESPIRATORY_RATE" />
+    <uses-permission android:name="android.permission.health.WRITE_RESPIRATORY_RATE" />
+    <uses-permission android:name="android.permission.health.READ_RESTING_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.WRITE_RESTING_HEART_RATE" />
+    <uses-permission android:name="android.permission.health.READ_SKIN_TEMPERATURE" />
+    <uses-permission android:name="android.permission.health.WRITE_SKIN_TEMPERATURE" />
+    <uses-permission android:name="android.permission.health.READ_SLEEP" />
+    <uses-permission android:name="android.permission.health.WRITE_SLEEP" />
+    <uses-permission android:name="android.permission.health.READ_HYDRATION" />
+    <uses-permission android:name="android.permission.health.WRITE_HYDRATION" />
+    <uses-permission android:name="android.permission.health.READ_NUTRITION" />
+    <uses-permission android:name="android.permission.health.WRITE_NUTRITION" />
+    <uses-permission android:name="android.permission.health.READ_MENSTRUATION" />
+    <uses-permission android:name="android.permission.health.WRITE_MENSTRUATION" />
+    <uses-permission android:name="android.permission.health.READ_INTERMENSTRUAL_BLEEDING" />
+    <uses-permission android:name="android.permission.health.WRITE_INTERMENSTRUAL_BLEEDING" />
+    <uses-permission android:name="android.permission.health.READ_CERVICAL_MUCUS" />
+    <uses-permission android:name="android.permission.health.WRITE_CERVICAL_MUCUS" />
+    <uses-permission android:name="android.permission.health.READ_OVULATION_TEST" />
+    <uses-permission android:name="android.permission.health.WRITE_OVULATION_TEST" />
+    <uses-permission android:name="android.permission.health.READ_SEXUAL_ACTIVITY" />
+    <uses-permission android:name="android.permission.health.WRITE_SEXUAL_ACTIVITY" />
+    <uses-permission android:name="android.permission.health.READ_BASAL_BODY_TEMPERATURE" />
+    <uses-permission android:name="android.permission.health.WRITE_BASAL_BODY_TEMPERATURE" />
+    <uses-permission android:name="android.permission.health.READ_MINDFULNESS" />
+    <uses-permission android:name="android.permission.health.WRITE_MINDFULNESS" />
+    <uses-permission android:name="android.permission.health.READ_PLANNED_EXERCISE" />
+    <uses-permission android:name="android.permission.health.WRITE_PLANNED_EXERCISE" />
+    <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_HISTORY" />
+    <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_ALLERGIES_INTOLERANCES" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_CONDITIONS" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_LABORATORY_RESULTS" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_MEDICATIONS" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_PERSONAL_DETAILS" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_PRACTITIONER_DETAILS" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_PREGNANCY" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_PROCEDURES" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_SOCIAL_HISTORY" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_VACCINES" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_VISITS" />
+    <uses-permission android:name="android.permission.health.READ_MEDICAL_DATA_VITAL_SIGNS" />
+    <uses-permission android:name="android.permission.health.WRITE_MEDICAL_DATA" />
+
+    <uses-feature
+        android:name="android.hardware.location.gps"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.heartrate"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.sensor.stepcounter"
+        android:required="false" />
+
     <queries>
-        <package android:name="com.termux" />
         <package android:name="moe.shizuku.privileged.api" />
         <package android:name="moe.shizuku.manager" />
+        <package android:name="com.termux" />
+        <package android:name="com.android.vending" />
+        <package android:name="com.huawei.appmarket" />
+        <package android:name="com.huawei.hms" />
+
+        <package android:name="com.android.calendar" />
+        <package android:name="com.google.android.calendar" />
+        <package android:name="com.huawei.calendar" />
+        <package android:name="com.miui.calendar" />
+        <package android:name="com.samsung.android.calendar" />
+        <package android:name="com.bbk.calendar" />
+        <package android:name="com.coloros.calendar" />
+        <package android:name="com.oppo.calendar" />
+        <package android:name="com.hihonor.calendar" />
+
+        <package android:name="com.autonavi.minimap" />
+        <package android:name="com.baidu.BaiduMap" />
+        <package android:name="com.tencent.map" />
+        <package android:name="com.google.android.apps.maps" />
+
+        <package android:name="com.google.android.apps.healthdata" />
+        <package android:name="com.google.android.apps.fitness" />
+        <package android:name="com.google.android.gms" />
+        <package android:name="com.google.android.wearable.app" />
+        <package android:name="com.huawei.health" />
+        <package android:name="com.huawei.bone" />
+        <package android:name="com.huawei.hwid" />
+        <package android:name="com.hihonor.health" />
+        <package android:name="com.hihonor.bone" />
+        <package android:name="com.mi.health" />
+        <package android:name="com.xiaomi.hm.health" />
+        <package android:name="com.xiaomi.wearable" />
+        <package android:name="com.huami.watch" />
+        <package android:name="com.huami.midong" />
+        <package android:name="com.zepp.sport" />
+        <package android:name="com.heytap.health" />
+        <package android:name="com.heytap.health.international" />
+        <package android:name="com.oplus.health" />
+        <package android:name="com.oneplus.health" />
+        <package android:name="com.realme.health" />
+        <package android:name="com.vivo.health" />
+        <package android:name="com.vivo.healthwidget" />
+        <package android:name="com.sec.android.app.shealth" />
+        <package android:name="com.samsung.android.service.health" />
+        <package android:name="com.samsung.android.app.watchmanager" />
+        <package android:name="com.samsung.android.heartplugin" />
+        <package android:name="com.meizu.flyme.health" />
+        <package android:name="com.nubia.health" />
+        <package android:name="cn.nubia.health" />
+        <package android:name="com.zte.heartyservice" />
+        <package android:name="com.motorola.motocare" />
+        <package android:name="com.sonymobile.lifelog" />
+        <package android:name="com.transsion.health" />
+        <package android:name="com.lenovo.health" />
+        <package android:name="com.fitbit.FitbitMobile" />
+        <package android:name="com.garmin.android.apps.connectmobile" />
+        <package android:name="com.polar.polarflow" />
+        <package android:name="com.stt.android" />
+        <package android:name="com.coros.coros" />
+        <package android:name="com.withings.wiscale2" />
+        <package android:name="com.ouraring.oura" />
+        <package android:name="com.whoop.app" />
+        <package android:name="com.gotokeep.keep" />
+        <package android:name="com.codoon.gps" />
+        <package android:name="com.yuedong.sport" />
+        <package android:name="com.boohee.one" />
+        <package android:name="cn.ledongli.ldl" />
+        <package android:name="com.mandian.android.dongdong" />
+        <package android:name="com.lefu.pp" />
+        <package android:name="com.strava" />
+        <package android:name="com.myfitnesspal.android" />
+        <package android:name="com.nike.plusgps" />
+        <package android:name="com.runtastic.android" />
+        <package android:name="com.peloton.android" />
+        <package android:name="com.tencent.mm" />
+        <package android:name="com.tencent.mobileqq" />
+        <package android:name="com.eg.android.AlipayGphone" />
+
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="googlegmail" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="geo" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="google.navigation" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="amapuri" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="androidamap" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="baidumap" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="qqmap" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="weixin" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="alipays" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="smsto" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <data android:mimeType="*/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.INSERT" />
+            <data android:mimeType="vnd.android.cursor.dir/event" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:mimeType="vnd.android.cursor.dir/event" />
+        </intent>
+        <intent>
+            <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+        </intent>
+        <intent>
+            <action android:name="android.health.connect.action.HEALTH_CONNECT_SETTINGS" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="spotify" />
+        </intent>
+        <intent>
+            <action android:name="com.spotify.sso.action.START_AUTH_FLOW" />
+        </intent>
+        <intent>
+            <action android:name="com.spotify.sso.action.END_AUTH_FLOW" />
+        </intent>
+        <package android:name="com.spotify.music" />
+        <package android:name="com.google.android.gm" />
     </queries>
 
     <application
         android:name=".AetherApplication"
         android:allowBackup="true"
+        android:enableOnBackInvokedCallback="false"
         android:icon="${appIcon}"
         android:label="${appLabel}"
         android:localeConfig="@xml/locales_config"
         android:roundIcon="${appRoundIcon}"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.Aether">
+        android:theme="@style/Theme.Aether"
+        tools:replace="android:allowBackup">
+        <meta-data
+            android:name="com.huawei.hms.client.appid"
+            android:value="${huaweiAppId}" />
+        <meta-data
+            android:name="com.samsung.android.health.permission.read"
+            android:value="com.samsung.health.exercise;com.samsung.health.step_count;com.samsung.shealth.step_daily_trend;com.samsung.health.heart_rate;com.samsung.health.sleep;com.samsung.health.weight;com.samsung.health.height;com.samsung.health.blood_pressure;com.samsung.health.blood_glucose;com.samsung.health.oxygen_saturation;com.samsung.health.body_temperature;com.samsung.health.body_fat;com.samsung.health.calorie;com.samsung.health.distance;com.samsung.health.water_intake;com.samsung.health.nutrition;com.samsung.health.floors_climbed" />
+        <meta-data
+            android:name="com.samsung.android.health.permission.write"
+            android:value="com.samsung.health.exercise;com.samsung.health.step_count;com.samsung.health.heart_rate;com.samsung.health.sleep;com.samsung.health.weight;com.samsung.health.height;com.samsung.health.blood_pressure;com.samsung.health.blood_glucose;com.samsung.health.oxygen_saturation;com.samsung.health.body_temperature;com.samsung.health.body_fat;com.samsung.health.calorie;com.samsung.health.distance;com.samsung.health.water_intake;com.samsung.health.nutrition;com.samsung.health.floors_climbed" />
+
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
             android:enabled="false"
@@ -41,12 +349,37 @@
         </service>
 
         <activity
+            android:name=".data.SpotifyConnectActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.Aether" />
+
+        <activity
+            android:name=".agentmode.AgentModeDeskActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleInstance"
+            android:resizeableActivity="true"
+            android:taskAffinity="kira.ditto.agent.desk"
+            android:theme="@style/Theme.Aether.AgentDesk"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|density|uiMode" />
+
+        <activity
+            android:name=".browser.BrowserActivity"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:resizeableActivity="true"
+            android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|density|uiMode"
+            android:theme="@style/Theme.Aether" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="${appLabel}"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.Aether">
+            android:enableOnBackInvokedCallback="false"
+            android:theme="@style/Theme.Aether.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,9 +387,23 @@
             </intent-filter>
         </activity>
 
-        <receiver
-            android:name=".termux.TermuxResultReceiver"
-            android:exported="false" />
+        <activity
+            android:name=".HealthPermissionRationaleActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
+        </activity>
+        <activity-alias
+            android:name="ViewPermissionUsageActivity"
+            android:exported="true"
+            android:permission="android.permission.START_VIEW_PERMISSION_USAGE"
+            android:targetActivity=".HealthPermissionRationaleActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW_PERMISSION_USAGE" />
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS" />
+            </intent-filter>
+        </activity-alias>
 
         <receiver
             android:name=".ScheduledTaskAlarmReceiver"
@@ -91,6 +438,16 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+
+        <service
+            android:name=".data.SpotifyMediaSessionListener"
+            android:exported="true"
+            android:label="@string/settings_spotify_mcp_title"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
 
         <service
             android:name=".AetherForegroundService"

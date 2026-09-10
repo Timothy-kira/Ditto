@@ -11,6 +11,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url = uri("https://maven.mozilla.org/maven2/") }
+        maven { url = uri("https://developer.huawei.com/repo/") }
         maven { url = uri("https://jitpack.io") }
     }
 }
@@ -21,6 +23,7 @@ include(":shared")
 val sharedOnly = providers.gradleProperty("aether.sharedOnly").orNull.toBoolean()
 if (!sharedOnly) {
     include(":app")
+    include(":baselineprofile")
     include(":terminal-emulator")
     include(":terminal-view")
 

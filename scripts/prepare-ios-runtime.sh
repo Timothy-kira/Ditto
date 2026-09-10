@@ -22,21 +22,18 @@ if [ ! -f "$rootfs" ] || [ "$(shasum -a 256 "$rootfs" | awk '{print $1}')" != "$
     trap - EXIT INT TERM
 fi
 
-bridge_source="$repo_root/pi-bridge/dist/bridge.mjs"
-extension_bridge_source="$repo_root/pi-bridge/dist/extension-bridge.mjs"
-if [ ! -f "$bridge_source" ] || [ ! -f "$extension_bridge_source" ]; then
-    npm_command=${NPM:-npm}
-    (
-        cd "$repo_root/pi-bridge"
-        "$npm_command" ci --ignore-scripts --legacy-peer-deps
-        "$npm_command" run build
-    )
-fi
-cp "$bridge_source" "$destination/bridge.mjs"
-cp "$extension_bridge_source" "$destination/extension-bridge.mjs"
-
-extensions_source="$repo_root/extensions"
-if [ -d "$extensions_source" ]; then
-    mkdir -p "$destination/extensions"
-    cp -R "$extensions_source/"* "$destination/extensions/"
+android_kimi_tgz="$repo_root/app/src/main/assets/runtimes/kimi/kimi-code-0.38.0.tgz"
+if [ -f "$android_kimi_tgz" ]; then
+    staging=$(mktemp -d "${TMPDIR:-/tmp}/aether-kimi.XXXXXX")
+    trap 'rm -rf "$staging"' EXIT INT TERM
+    tar -xzf "$android_kimi_tgz" -C "$staging"
+    package_root="$staging"
+    if [ -d "$staging/package" ]; then
+        package_root="$staging/package"
+    fi
+    rm -rf "$package_root/dist-web" "$package_root/native"
+    mkdir -p "$destination"
+    tar -czf "$destination/kimi-code-0.38.0.tgz" -C "$package_root" .
+    trap - EXIT INT TERM
+    rm -rf "$staging"
 fi

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 240dp splash slot, 160dp circular mask. Fill + inset keeps the mascot
+     inside the mask even when the source PNG is nodpi 1024px. -->
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:insetLeft="64dp"
+    android:insetTop="64dp"
+    android:insetRight="64dp"
+    android:insetBottom="64dp">
+    <bitmap
+        android:gravity="fill"
+        android:src="@drawable/aether_mark" />
+</inset>

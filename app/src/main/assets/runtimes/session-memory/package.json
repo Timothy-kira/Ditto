@@ -1,0 +1,10 @@
+{
+  "name": "@aether/session-memory",
+  "version": "1.0.0",
+  "type": "module",
+  "exports": {
+    ".": "./index.mjs",
+    "./hook.mjs": "./hook.mjs",
+    "./mcp.mjs": "./mcp.mjs"
+  }
+}

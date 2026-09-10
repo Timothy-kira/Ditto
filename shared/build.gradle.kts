@@ -75,7 +75,7 @@ room {
 }
 
 android {
-    namespace = "com.zhousl.aether.shared"
+    namespace = "kira.ditto.shared"
     compileSdk = 36
 
     defaultConfig {
@@ -90,6 +90,6 @@ android {
 
 compose.resources {
     publicResClass = true
-    packageOfResClass = "com.zhousl.aether.shared.resources"
+    packageOfResClass = "kira.ditto.shared.resources"
     generateResClass = always
 }

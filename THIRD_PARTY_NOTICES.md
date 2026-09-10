@@ -1,5 +1,25 @@
 # Third-party notices
 
+## Kimi Code CLI
+
+Kimi Code Mobile installs the official
+[`@moonshot-ai/kimi-code`](https://github.com/MoonshotAI/kimi-code) package at
+runtime. The pinned application version is `0.41.0`.
+
+- Copyright: Moonshot AI.
+- License: MIT License.
+- The CLI is the sole coding-agent engine; this repository does not modify or
+  impersonate the CLI protocol identity.
+- Android Alpine is offline and cannot `npm install`. kimi-code `0.41.0`
+  ESM-imports `ws` and `qrcode`, so those packages plus qrcode's runtime
+  dependencies `dijkstrajs` and `pngjs` are vendored inside
+  `app/src/main/assets/runtimes/kimi/kimi-code-0.41.0.tgz` (`package/node_modules/`).
+  All four are MIT-licensed:
+  [ws](https://github.com/websockets/ws),
+  [qrcode](https://github.com/soldair/node-qrcode),
+  [dijkstrajs](https://github.com/tcort/dijkstrajs),
+  [pngjs](https://github.com/pngjs/pngjs).
+
 ## OpenMinis/ish-arm64
 
 Aether's iOS runtime integrates [OpenMinis/ish-arm64](https://github.com/OpenMinis/ish-arm64)

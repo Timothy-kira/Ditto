@@ -433,6 +433,7 @@ private struct NativeDefaultModelsView: View {
         ("defaultTitleModelKey", "Title generation", "标题生成", "title"),
         ("defaultNamingModelKey", "Naming", "命名", "naming"),
         ("defaultCompactingModelKey", "Compacting", "上下文压缩", "compacting"),
+        ("defaultVectorModelKey", "Vector", "向量", "vector"),
     ]
 
     var body: some View {
@@ -2121,7 +2122,7 @@ private struct NativeAboutSettingsView: View {
                     .frame(width: 96, height: 96)
                     .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
                     .padding(.top, 24)
-                Text("Aether").font(.largeTitle.bold())
+                Text("Ditto").font(.largeTitle.bold())
                 Text(model.text("Release \(version)", "正式版 \(version)"))
                     .font(.subheadline).foregroundStyle(.secondary)
                 VStack(spacing: 0) {

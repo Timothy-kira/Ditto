@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<link rel="stylesheet" href="leaflet.css"/>
+<style>
+  html, body, #map { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
+  html, body { background: #dfe8eb; }
+  html.dark, html.dark body, html.dark #map { background: #1c1c1e; }
+  .leaflet-control-attribution, .leaflet-control-zoom { display: none !important; }
+  html.dark .leaflet-tile-pane {
+    filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.92) saturate(0.65);
+  }
+  .amap-nav-dot {
+    width: 18px; height: 18px; border-radius: 50%;
+    border: 2px solid #fff; box-sizing: border-box;
+    display: flex; align-items: center; justify-content: center;
+    font: 700 10px/1 sans-serif; color: #fff;
+  }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<script src="leaflet.js"></script>
+<script>
+  const tileUrl = "https://webrd0{s}.is.autonavi.com/appmaptile?lang=zh_cn&size=1&scale=1&style=8&x={x}&y={y}&z={z}";
+  const map = L.map("map", {
+    zoomControl: false,
+    attributionControl: false,
+    dragging: false,
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    boxZoom: false,
+    keyboard: false,
+    tap: false,
+    touchZoom: false,
+    bounceAtZoomLimits: false,
+  });
+  const tiles = L.tileLayer(tileUrl, { maxZoom: 18, subdomains: "1234" });
+  let dark = false;
+  let line = null;
+  let startMark = null;
+  let endMark = null;
+  let lastPayload = null;
+  let tilesReady = false;
+
+  function markerIcon(color, label) {
+    return L.divIcon({
+      className: "",
+      html: '<div class="amap-nav-dot" style="background:' + color + '">' + label + "</div>",
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+    });
+  }
+
+  function notifyReady() {
+    try { AetherNav.onMapReady(); } catch (e) {}
+  }
+
+  function notifySettled() {
+    if (tilesReady) return;
+    tilesReady = true;
+    try { AetherNav.onTilesSettled(); } catch (e) {}
+  }
+
+  tiles.on("load", notifySettled);
+  tiles.on("tileerror", notifySettled);
+  tiles.addTo(map);
+  map.setView([31.23, 121.47], 13);
+  map.whenReady(notifyReady);
+
+  function applyDark() {
+    document.documentElement.classList.toggle("dark", dark);
+  }
+
+  function fitRoute(payload) {
+    if (!payload) return;
+    const pad = Math.max(0, Number(payload.padBottom) || 0);
+    const side = 18;
+    let bounds = null;
+    if (payload.bounds && payload.bounds.length === 2) {
+      bounds = L.latLngBounds(payload.bounds);
+    } else if (payload.path && payload.path.length) {
+      bounds = L.latLngBounds(payload.path);
+    }
+    if (!bounds || !bounds.isValid()) return;
+    map.invalidateSize();
+    map.fitBounds(bounds, {
+      animate: !!payload.animate,
+      paddingTopLeft: [side, 16],
+      paddingBottomRight: [side, pad + 12],
+      maxZoom: 16,
+    });
+  }
+
+  window.aetherInvalidate = function () {
+    map.invalidateSize();
+    fitRoute(lastPayload);
+  };
+
+  window.aetherSetDark = function (value) {
+    const next = !!value;
+    if (next === dark) return;
+    dark = next;
+    applyDark();
+    fitRoute(lastPayload);
+  };
+
+  window.aetherSetRoute = function (payload) {
+    lastPayload = payload || null;
+    if (!lastPayload) return;
+    dark = !!lastPayload.dark;
+    applyDark();
+    const path = lastPayload.path || [];
+    if (line) {
+      line.setLatLngs(path);
+    } else {
+      line = L.polyline(path, { color: "#2A7FFF", weight: 4, opacity: 0.95 }).addTo(map);
+    }
+    if (lastPayload.origin) {
+      if (startMark) startMark.setLatLng(lastPayload.origin);
+      else startMark = L.marker(lastPayload.origin, { icon: markerIcon("#34C759", "起"), interactive: false }).addTo(map);
+    }
+    if (lastPayload.dest) {
+      if (endMark) endMark.setLatLng(lastPayload.dest);
+      else endMark = L.marker(lastPayload.dest, { icon: markerIcon("#FF3B30", "终"), interactive: false }).addTo(map);
+    }
+    fitRoute(lastPayload);
+  };
+</script>
+</body>
+</html>

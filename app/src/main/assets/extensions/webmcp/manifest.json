@@ -1,0 +1,37 @@
+{
+  "manifest_version": 2,
+  "name": "Aether WebMCP",
+  "version": "1.0",
+  "description": "Page tools, AX snapshot, and document.modelContext polyfill",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "webmcp@aether"
+    }
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["inject.js"],
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "web_accessible_resources": ["polyfill.js"],
+  "permissions": [
+    "nativeMessaging",
+    "nativeMessagingFromContent",
+    "geckoViewAddons",
+    "tabs",
+    "<all_urls>",
+    "webRequest"
+  ]
+}

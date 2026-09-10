@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="640dp"
+    android:height="640dp"
+    android:viewportWidth="36"
+    android:viewportHeight="36">
+    <!-- Official StepFun mark, adapted from https://www.stepfun.com/assets/logo-B0FsyLQP.svg -->
+    <path
+        android:fillColor="#FF000000"
+        android:pathData="M18,0C8.05758,0 0,8.05758 0,18C0,27.9424 8.05758,36 18,36C27.9424,36 36,27.9424 36,18C36,8.05758 27.9424,0 18,0ZM13.1431,29.4208H6.56393V22.8417H13.1431V29.4208ZM21.2769,29.4208H14.6977V22.8417H21.2769V29.4208ZM21.2769,21.2921H14.6977V14.713H21.2769V21.2921ZM21.2769,13.1634H14.6977V6.58425H21.2769V13.1634ZM29.4107,13.1583H22.8315V6.57917H29.4107V13.1583Z" />
+</vector>

@@ -41,7 +41,18 @@ static NSString *const AetherISHErrorDomain = @"com.baimoqilin.aether.ish";
 @property(atomic) BOOL completed;
 @property(atomic) BOOL exitDelivered;
 @property(nonatomic) dispatch_group_t readerGroup;
+@property(nonatomic) NSMutableData *pendingTTY;
+@property(nonatomic) BOOL ttyFlushScheduled;
 @end
+
+static dispatch_queue_t AetherISHTtyQueue(void) {
+    static dispatch_once_t onceToken;
+    static dispatch_queue_t queue;
+    dispatch_once(&onceToken, ^{
+        queue = dispatch_queue_create("kira.aether.ish.tty", DISPATCH_QUEUE_SERIAL);
+    });
+    return queue;
+}
 
 static int AetherISHTTYInitialize(struct tty *tty) {
     return 0;
@@ -51,8 +62,21 @@ static int AetherISHTTYWrite(struct tty *tty, const void *buffer, size_t length,
     AetherISHProcess *process = (__bridge AetherISHProcess *)tty->data;
     if (!process || process.completed || length == 0) return (int)length;
     NSData *data = [NSData dataWithBytes:buffer length:length];
-    AetherISHOutputBlock output = process.stdoutBlock;
-    dispatch_async(dispatch_get_main_queue(), ^{ output(data); });
+    dispatch_async(AetherISHTtyQueue(), ^{
+        if (process.completed) return;
+        if (!process.pendingTTY) process.pendingTTY = [NSMutableData data];
+        [process.pendingTTY appendData:data];
+        if (process.ttyFlushScheduled) return;
+        process.ttyFlushScheduled = YES;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 8 * NSEC_PER_MSEC), AetherISHTtyQueue(), ^{
+            process.ttyFlushScheduled = NO;
+            NSData *batch = [process.pendingTTY copy];
+            process.pendingTTY = nil;
+            AetherISHOutputBlock output = process.stdoutBlock;
+            if (!output || batch.length == 0 || process.completed) return;
+            output(batch);
+        });
+    });
     return (int)length;
 }
 
@@ -513,7 +537,7 @@ static void AetherISHDie(const char *message) {
             if (count > 0) {
                 idleReadsAfterExit = 0;
                 NSData *data = [NSData dataWithBytes:buffer length:(NSUInteger)count];
-                dispatch_async(dispatch_get_main_queue(), ^{ block(data); });
+                block(data);
             } else if (count == 0) {
                 break;
             } else if (errno == EAGAIN || errno == EWOULDBLOCK) {

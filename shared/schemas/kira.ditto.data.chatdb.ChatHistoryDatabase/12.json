@@ -1,0 +1,1260 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 12,
+    "identityHash": "7656e7e588928830f7557a0876febbce",
+    "entities": [
+      {
+        "tableName": "chat_sessions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT NOT NULL, `preview` TEXT NOT NULL, `hasCustomTitle` INTEGER NOT NULL, `agentModeEnabled` INTEGER NOT NULL, `chromeEnabled` INTEGER NOT NULL, `selectedModelKey` TEXT NOT NULL, `sortOrder` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "preview",
+            "columnName": "preview",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasCustomTitle",
+            "columnName": "hasCustomTitle",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "agentModeEnabled",
+            "columnName": "agentModeEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "chromeEnabled",
+            "columnName": "chromeEnabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "selectedModelKey",
+            "columnName": "selectedModelKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sortOrder",
+            "columnName": "sortOrder",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_chat_sessions_sortOrder",
+            "unique": false,
+            "columnNames": [
+              "sortOrder"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chat_sessions_sortOrder` ON `${TABLE_NAME}` (`sortOrder`)"
+          }
+        ]
+      },
+      {
+        "tableName": "chat_agent_sessions",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`chatSessionId` TEXT NOT NULL, `piSessionId` TEXT NOT NULL, `jsonlPath` TEXT NOT NULL, `runtime` TEXT NOT NULL, `migrationVersion` INTEGER NOT NULL, `updatedAtMillis` INTEGER NOT NULL, PRIMARY KEY(`chatSessionId`), FOREIGN KEY(`chatSessionId`) REFERENCES `chat_sessions`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "chatSessionId",
+            "columnName": "chatSessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "piSessionId",
+            "columnName": "piSessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "jsonlPath",
+            "columnName": "jsonlPath",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "runtime",
+            "columnName": "runtime",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "migrationVersion",
+            "columnName": "migrationVersion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAtMillis",
+            "columnName": "updatedAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "chatSessionId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_chat_agent_sessions_piSessionId",
+            "unique": true,
+            "columnNames": [
+              "piSessionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_chat_agent_sessions_piSessionId` ON `${TABLE_NAME}` (`piSessionId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_sessions",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "chatSessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "chat_agent_message_refs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`chatSessionId` TEXT NOT NULL, `aetherMessageId` TEXT NOT NULL, `piEntryId` TEXT NOT NULL, `ordinal` INTEGER NOT NULL, PRIMARY KEY(`chatSessionId`, `aetherMessageId`, `piEntryId`), FOREIGN KEY(`chatSessionId`, `aetherMessageId`) REFERENCES `chat_messages`(`sessionId`, `id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "chatSessionId",
+            "columnName": "chatSessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aetherMessageId",
+            "columnName": "aetherMessageId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "piEntryId",
+            "columnName": "piEntryId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ordinal",
+            "columnName": "ordinal",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "chatSessionId",
+            "aetherMessageId",
+            "piEntryId"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_chat_agent_message_refs_chatSessionId_piEntryId",
+            "unique": false,
+            "columnNames": [
+              "chatSessionId",
+              "piEntryId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chat_agent_message_refs_chatSessionId_piEntryId` ON `${TABLE_NAME}` (`chatSessionId`, `piEntryId`)"
+          },
+          {
+            "name": "index_chat_agent_message_refs_chatSessionId_aetherMessageId",
+            "unique": false,
+            "columnNames": [
+              "chatSessionId",
+              "aetherMessageId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chat_agent_message_refs_chatSessionId_aetherMessageId` ON `${TABLE_NAME}` (`chatSessionId`, `aetherMessageId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_messages",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "chatSessionId",
+              "aetherMessageId"
+            ],
+            "referencedColumns": [
+              "sessionId",
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "chat_messages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` TEXT NOT NULL, `id` TEXT NOT NULL, `position` INTEGER NOT NULL, `messageJson` TEXT NOT NULL, `author` TEXT NOT NULL, `text` TEXT NOT NULL, `createdAtMillis` INTEGER, `responseGroupId` TEXT, `displayKind` TEXT, `messageSchemaVersion` INTEGER NOT NULL, `hasUsageStatistics` INTEGER NOT NULL, `isIncomplete` INTEGER NOT NULL, `contentHash` TEXT NOT NULL, `payloadHash` TEXT NOT NULL, PRIMARY KEY(`sessionId`, `id`), FOREIGN KEY(`sessionId`) REFERENCES `chat_sessions`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "position",
+            "columnName": "position",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageJson",
+            "columnName": "messageJson",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "author",
+            "columnName": "author",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtMillis",
+            "columnName": "createdAtMillis",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "responseGroupId",
+            "columnName": "responseGroupId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "displayKind",
+            "columnName": "displayKind",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "messageSchemaVersion",
+            "columnName": "messageSchemaVersion",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hasUsageStatistics",
+            "columnName": "hasUsageStatistics",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isIncomplete",
+            "columnName": "isIncomplete",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentHash",
+            "columnName": "contentHash",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payloadHash",
+            "columnName": "payloadHash",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "sessionId",
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_chat_messages_sessionId_position",
+            "unique": true,
+            "columnNames": [
+              "sessionId",
+              "position"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_chat_messages_sessionId_position` ON `${TABLE_NAME}` (`sessionId`, `position`)"
+          },
+          {
+            "name": "index_chat_messages_sessionId_responseGroupId",
+            "unique": false,
+            "columnNames": [
+              "sessionId",
+              "responseGroupId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chat_messages_sessionId_responseGroupId` ON `${TABLE_NAME}` (`sessionId`, `responseGroupId`)"
+          },
+          {
+            "name": "index_chat_messages_sessionId_author",
+            "unique": false,
+            "columnNames": [
+              "sessionId",
+              "author"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chat_messages_sessionId_author` ON `${TABLE_NAME}` (`sessionId`, `author`)"
+          },
+          {
+            "name": "index_chat_messages_hasUsageStatistics",
+            "unique": false,
+            "columnNames": [
+              "hasUsageStatistics"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chat_messages_hasUsageStatistics` ON `${TABLE_NAME}` (`hasUsageStatistics`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_sessions",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "chat_message_payloads",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` TEXT NOT NULL, `messageId` TEXT NOT NULL, `payloadJson` TEXT NOT NULL, PRIMARY KEY(`sessionId`, `messageId`), FOREIGN KEY(`sessionId`, `messageId`) REFERENCES `chat_messages`(`sessionId`, `id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageId",
+            "columnName": "messageId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "payloadJson",
+            "columnName": "payloadJson",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "sessionId",
+            "messageId"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "chat_messages",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId",
+              "messageId"
+            ],
+            "referencedColumns": [
+              "sessionId",
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "chat_workspace_file_refs",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` TEXT NOT NULL, `messageId` TEXT NOT NULL, `path` TEXT NOT NULL, PRIMARY KEY(`sessionId`, `messageId`, `path`), FOREIGN KEY(`sessionId`, `messageId`) REFERENCES `chat_messages`(`sessionId`, `id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageId",
+            "columnName": "messageId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "path",
+            "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "sessionId",
+            "messageId",
+            "path"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_chat_workspace_file_refs_path",
+            "unique": false,
+            "columnNames": [
+              "path"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chat_workspace_file_refs_path` ON `${TABLE_NAME}` (`path`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_messages",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId",
+              "messageId"
+            ],
+            "referencedColumns": [
+              "sessionId",
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "chat_state_meta",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `currentSessionId` TEXT, `roomMigrationComplete` INTEGER NOT NULL, `workspaceFileRefsComplete` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`currentSessionId`) REFERENCES `chat_sessions`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "currentSessionId",
+            "columnName": "currentSessionId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "roomMigrationComplete",
+            "columnName": "roomMigrationComplete",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workspaceFileRefsComplete",
+            "columnName": "workspaceFileRefsComplete",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_chat_state_meta_currentSessionId",
+            "unique": false,
+            "columnNames": [
+              "currentSessionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_chat_state_meta_currentSessionId` ON `${TABLE_NAME}` (`currentSessionId`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_sessions",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "currentSessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "browser_pages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` TEXT NOT NULL, `pageKey` TEXT NOT NULL, `url` TEXT NOT NULL, `canonical` TEXT NOT NULL, `title` TEXT NOT NULL, `contentHash` TEXT NOT NULL, `charCount` INTEGER NOT NULL, `indexedAtMillis` INTEGER NOT NULL, PRIMARY KEY(`sessionId`, `pageKey`, `contentHash`), FOREIGN KEY(`sessionId`) REFERENCES `chat_sessions`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pageKey",
+            "columnName": "pageKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "canonical",
+            "columnName": "canonical",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentHash",
+            "columnName": "contentHash",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "charCount",
+            "columnName": "charCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "indexedAtMillis",
+            "columnName": "indexedAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "sessionId",
+            "pageKey",
+            "contentHash"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_browser_pages_sessionId",
+            "unique": false,
+            "columnNames": [
+              "sessionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_pages_sessionId` ON `${TABLE_NAME}` (`sessionId`)"
+          },
+          {
+            "name": "index_browser_pages_sessionId_pageKey",
+            "unique": false,
+            "columnNames": [
+              "sessionId",
+              "pageKey"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_pages_sessionId_pageKey` ON `${TABLE_NAME}` (`sessionId`, `pageKey`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_sessions",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "browser_passages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` TEXT NOT NULL, `pageKey` TEXT NOT NULL, `contentHash` TEXT NOT NULL, `ordinal` INTEGER NOT NULL, `heading` TEXT NOT NULL, `text` TEXT NOT NULL, PRIMARY KEY(`sessionId`, `pageKey`, `contentHash`, `ordinal`), FOREIGN KEY(`sessionId`, `pageKey`, `contentHash`) REFERENCES `browser_pages`(`sessionId`, `pageKey`, `contentHash`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pageKey",
+            "columnName": "pageKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentHash",
+            "columnName": "contentHash",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ordinal",
+            "columnName": "ordinal",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "heading",
+            "columnName": "heading",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "text",
+            "columnName": "text",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "sessionId",
+            "pageKey",
+            "contentHash",
+            "ordinal"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_browser_passages_sessionId_pageKey_contentHash",
+            "unique": false,
+            "columnNames": [
+              "sessionId",
+              "pageKey",
+              "contentHash"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_passages_sessionId_pageKey_contentHash` ON `${TABLE_NAME}` (`sessionId`, `pageKey`, `contentHash`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "browser_pages",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId",
+              "pageKey",
+              "contentHash"
+            ],
+            "referencedColumns": [
+              "sessionId",
+              "pageKey",
+              "contentHash"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "browser_citations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `sessionId` TEXT NOT NULL, `messageId` TEXT NOT NULL, `topicId` TEXT NOT NULL, `pageKey` TEXT NOT NULL, `url` TEXT NOT NULL, `title` TEXT NOT NULL, `contentHash` TEXT NOT NULL, `passageOrdinal` INTEGER NOT NULL, `quote` TEXT NOT NULL, `quoteHash` TEXT NOT NULL, `confidence` TEXT NOT NULL, `kind` TEXT NOT NULL, `source` TEXT NOT NULL, `createdAtMillis` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`sessionId`) REFERENCES `chat_sessions`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageId",
+            "columnName": "messageId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "topicId",
+            "columnName": "topicId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pageKey",
+            "columnName": "pageKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "url",
+            "columnName": "url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentHash",
+            "columnName": "contentHash",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "passageOrdinal",
+            "columnName": "passageOrdinal",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quote",
+            "columnName": "quote",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "quoteHash",
+            "columnName": "quoteHash",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confidence",
+            "columnName": "confidence",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kind",
+            "columnName": "kind",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtMillis",
+            "columnName": "createdAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_browser_citations_sessionId_messageId",
+            "unique": false,
+            "columnNames": [
+              "sessionId",
+              "messageId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_citations_sessionId_messageId` ON `${TABLE_NAME}` (`sessionId`, `messageId`)"
+          },
+          {
+            "name": "index_browser_citations_sessionId_topicId",
+            "unique": false,
+            "columnNames": [
+              "sessionId",
+              "topicId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_citations_sessionId_topicId` ON `${TABLE_NAME}` (`sessionId`, `topicId`)"
+          },
+          {
+            "name": "index_browser_citations_pageKey",
+            "unique": false,
+            "columnNames": [
+              "pageKey"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_citations_pageKey` ON `${TABLE_NAME}` (`pageKey`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_sessions",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "browser_tasks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `sessionId` TEXT NOT NULL, `messageId` TEXT NOT NULL, `topicId` TEXT NOT NULL, `goal` TEXT NOT NULL, `summary` TEXT NOT NULL, `tags` TEXT NOT NULL, `openTodos` TEXT NOT NULL, `salience` REAL NOT NULL, `source` TEXT NOT NULL, `uploadState` TEXT NOT NULL, `contentSha256` TEXT NOT NULL, `createdAtMillis` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`sessionId`) REFERENCES `chat_sessions`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "messageId",
+            "columnName": "messageId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "topicId",
+            "columnName": "topicId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goal",
+            "columnName": "goal",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "summary",
+            "columnName": "summary",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "tags",
+            "columnName": "tags",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "openTodos",
+            "columnName": "openTodos",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "salience",
+            "columnName": "salience",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uploadState",
+            "columnName": "uploadState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentSha256",
+            "columnName": "contentSha256",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createdAtMillis",
+            "columnName": "createdAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_browser_tasks_sessionId_topicId",
+            "unique": false,
+            "columnNames": [
+              "sessionId",
+              "topicId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_tasks_sessionId_topicId` ON `${TABLE_NAME}` (`sessionId`, `topicId`)"
+          },
+          {
+            "name": "index_browser_tasks_uploadState",
+            "unique": false,
+            "columnNames": [
+              "uploadState"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_tasks_uploadState` ON `${TABLE_NAME}` (`uploadState`)"
+          },
+          {
+            "name": "index_browser_tasks_createdAtMillis",
+            "unique": false,
+            "columnNames": [
+              "createdAtMillis"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_tasks_createdAtMillis` ON `${TABLE_NAME}` (`createdAtMillis`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_sessions",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "browser_origins",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`sessionId` TEXT NOT NULL, `origin` TEXT NOT NULL, `title` TEXT NOT NULL, `facts` TEXT NOT NULL, `lastConfirmedAtMillis` INTEGER NOT NULL, `confirmCount` INTEGER NOT NULL, `source` TEXT NOT NULL, `uploadState` TEXT NOT NULL, `contentSha256` TEXT NOT NULL, PRIMARY KEY(`sessionId`, `origin`), FOREIGN KEY(`sessionId`) REFERENCES `chat_sessions`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "origin",
+            "columnName": "origin",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "title",
+            "columnName": "title",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facts",
+            "columnName": "facts",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lastConfirmedAtMillis",
+            "columnName": "lastConfirmedAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "confirmCount",
+            "columnName": "confirmCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uploadState",
+            "columnName": "uploadState",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "contentSha256",
+            "columnName": "contentSha256",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "sessionId",
+            "origin"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_browser_origins_origin",
+            "unique": false,
+            "columnNames": [
+              "origin"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_origins_origin` ON `${TABLE_NAME}` (`origin`)"
+          },
+          {
+            "name": "index_browser_origins_uploadState",
+            "unique": false,
+            "columnNames": [
+              "uploadState"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_browser_origins_uploadState` ON `${TABLE_NAME}` (`uploadState`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "chat_sessions",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "sessionId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "llm_usage_records",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `sessionId` TEXT, `source` TEXT NOT NULL, `providerId` TEXT NOT NULL, `modelId` TEXT NOT NULL, `agentId` TEXT, `inputTokens` INTEGER, `outputTokens` INTEGER, `totalTokens` INTEGER, `reasoningTokens` INTEGER, `cachedInputTokens` INTEGER, `requestCount` INTEGER NOT NULL, `usageSource` TEXT NOT NULL, `startedAtMillis` INTEGER NOT NULL, `completedAtMillis` INTEGER NOT NULL, `firstTokenAtMillis` INTEGER, PRIMARY KEY(`id`))",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sessionId",
+            "columnName": "sessionId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "providerId",
+            "columnName": "providerId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "modelId",
+            "columnName": "modelId",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "agentId",
+            "columnName": "agentId",
+            "affinity": "TEXT"
+          },
+          {
+            "fieldPath": "inputTokens",
+            "columnName": "inputTokens",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "outputTokens",
+            "columnName": "outputTokens",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "totalTokens",
+            "columnName": "totalTokens",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "reasoningTokens",
+            "columnName": "reasoningTokens",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "cachedInputTokens",
+            "columnName": "cachedInputTokens",
+            "affinity": "INTEGER"
+          },
+          {
+            "fieldPath": "requestCount",
+            "columnName": "requestCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "usageSource",
+            "columnName": "usageSource",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "startedAtMillis",
+            "columnName": "startedAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completedAtMillis",
+            "columnName": "completedAtMillis",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstTokenAtMillis",
+            "columnName": "firstTokenAtMillis",
+            "affinity": "INTEGER"
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_llm_usage_records_sessionId",
+            "unique": false,
+            "columnNames": [
+              "sessionId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_llm_usage_records_sessionId` ON `${TABLE_NAME}` (`sessionId`)"
+          },
+          {
+            "name": "index_llm_usage_records_source",
+            "unique": false,
+            "columnNames": [
+              "source"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_llm_usage_records_source` ON `${TABLE_NAME}` (`source`)"
+          },
+          {
+            "name": "index_llm_usage_records_completedAtMillis",
+            "unique": false,
+            "columnNames": [
+              "completedAtMillis"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_llm_usage_records_completedAtMillis` ON `${TABLE_NAME}` (`completedAtMillis`)"
+          },
+          {
+            "name": "index_llm_usage_records_modelId",
+            "unique": false,
+            "columnNames": [
+              "modelId"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_llm_usage_records_modelId` ON `${TABLE_NAME}` (`modelId`)"
+          }
+        ]
+      },
+      {
+        "tableName": "llm_usage_wire_cursors",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`wireKey` TEXT NOT NULL, `consumedCount` INTEGER NOT NULL, PRIMARY KEY(`wireKey`))",
+        "fields": [
+          {
+            "fieldPath": "wireKey",
+            "columnName": "wireKey",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "consumedCount",
+            "columnName": "consumedCount",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "wireKey"
+          ]
+        }
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7656e7e588928830f7557a0876febbce')"
+    ]
+  }
+}

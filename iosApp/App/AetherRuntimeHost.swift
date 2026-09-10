@@ -57,7 +57,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
     static let shared = AetherRuntimeHost()
 
     private let runtime = AetherISHRuntime.shared()
-    private let operations = DispatchQueue(label: "com.baimoqilin.aether.runtime-host")
+    private let operations = DispatchQueue(label: "com.kira.ditto.runtime-host")
     private var initialized = false
     private var initializationInProgress = false
     private var initializationListeners: [NativeRuntimeInitializationListener] = []
@@ -261,7 +261,6 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             try guestBind(hostPath: chromeRuntime.path, guestPath: "/usr/lib/chromium")
             try guestCreateDirectories("/opt/aether/chromium-deps")
             try guestBind(hostPath: chromeDependencies.path, guestPath: "/opt/aether/chromium-deps")
-            try installBridgeAsset()
             try installPreinstalledExtensions()
             try installNodeCompatibilityAssets()
         } catch {
@@ -290,7 +289,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             exit: { code, _ in
                 self.operations.async {
                     if code == 0 {
-                        self.markRuntimeReady()
+                        self.installKimiCode()
                     } else {
                         self.installNode()
                     }
@@ -354,7 +353,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             exit: { code, _ in
                 self.operations.async {
                     if code == 0 {
-                        self.markRuntimeReady()
+                        self.installKimiCode()
                         return
                     }
                     let detail = installOutput
@@ -385,6 +384,82 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
         done
         exit 1
         """
+
+    private static let kimiCodeVersion = "0.38.0"
+    private static let kimiInstallRoot = "/root/.kimi-code-mobile"
+    private static let kimiHome = "/root/.kimi-code"
+    private static let kimiMainJs =
+        "\(kimiInstallRoot)/node_modules/@moonshot-ai/kimi-code/dist/main.mjs"
+
+    private func installKimiCode() {
+        let markerPath = "\(Self.kimiInstallRoot)/.bundled-version"
+        if let marker = try? runtime.readFile(markerPath),
+           String(data: marker, encoding: .utf8)?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .contains(Self.kimiCodeVersion) == true,
+           runtime.fileExists("/usr/local/bin/kimi") {
+            markRuntimeReady()
+            return
+        }
+        let bundled = Bundle.main.url(forResource: "kimi-code-\(Self.kimiCodeVersion)", withExtension: "tgz")
+        let fallback = Bundle.main.resourceURL?
+            .appendingPathComponent("kimi-code-\(Self.kimiCodeVersion).tgz")
+        let source = [bundled, fallback].compactMap { $0 }.first {
+            FileManager.default.fileExists(atPath: $0.path)
+        }
+        guard let source else {
+            markRuntimeReady()
+            return
+        }
+        reportInitializationProgress(
+            phase: "installing_kimi",
+            detail: "Installing Kimi Code",
+            fraction: 0.9
+        )
+        do {
+            try guestCreateDirectories("/root/.aether/kimi-offline")
+            try runtime.writeFile(
+                "/root/.aether/kimi-offline/kimi-code.tgz",
+                data: Data(contentsOf: source),
+                executable: false
+            )
+        } catch {
+            finishInitialization(error: error.localizedDescription)
+            return
+        }
+        let command = """
+            mkdir -p '\(Self.kimiInstallRoot)/node_modules/@moonshot-ai/kimi-code' '\(Self.kimiHome)'
+            tar -xzf /root/.aether/kimi-offline/kimi-code.tgz -C '\(Self.kimiInstallRoot)/node_modules/@moonshot-ai/kimi-code' --strip-components=1
+            rm -rf '\(Self.kimiInstallRoot)/node_modules/@moonshot-ai/kimi-code/dist-web' '\(Self.kimiInstallRoot)/node_modules/@moonshot-ai/kimi-code/native'
+            printf '#!/bin/sh\\nexport KIMI_CODE_HOME="${KIMI_CODE_HOME:-\(Self.kimiHome)}"\\nexec node \(Self.kimiMainJs) "$@"\\n' > /usr/local/bin/kimi
+            chmod 0755 /usr/local/bin/kimi
+            kimi --version
+            mkdir -p '\(Self.kimiInstallRoot)'
+            printf '%s\\n' '\(Self.kimiCodeVersion)+acp-1' > '\(markerPath)'
+            """
+        let pid = runtime.startExecutable(
+            "/bin/sh",
+            arguments: ["-c", command],
+            environment: ["KIMI_CODE_HOME": Self.kimiHome],
+            workingDirectory: "/root",
+            pseudoTerminal: false,
+            remoteDebuggingPipe: false,
+            standardOutput: { _ in },
+            standardError: { _ in },
+            exit: { code, _ in
+                self.operations.async {
+                    if code == 0 {
+                        self.markRuntimeReady()
+                    } else {
+                        self.finishInitialization(error: "Unable to install Kimi Code in Alpine (\(code)).")
+                    }
+                }
+            }
+        )
+        if pid < 0 {
+            finishInitialization(error: "Unable to start Kimi Code installation (\(pid)).")
+        }
+    }
 
     private func markRuntimeReady() {
         do {
@@ -546,7 +621,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             do {
                 guard maximumBytes >= 0, maximumBytes <= Int64(Int.max) else {
                     throw NSError(
-                        domain: "com.baimoqilin.aether.runtime-host",
+                        domain: "com.kira.ditto.runtime-host",
                         code: 1,
                         userInfo: [NSLocalizedDescriptionKey: "Invalid file size limit."]
                     )
@@ -564,7 +639,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             do {
                 guard maximumBytes >= 0, maximumBytes <= Int64(Int.max) else {
                     throw NSError(
-                        domain: "com.baimoqilin.aether.runtime-host",
+                        domain: "com.kira.ditto.runtime-host",
                         code: 1,
                         userInfo: [NSLocalizedDescriptionKey: "Invalid file size limit."]
                     )
@@ -1191,7 +1266,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             }
         ) else {
             throw NSError(
-                domain: "com.baimoqilin.aether.file-picker",
+                domain: "com.kira.ditto.file-picker",
                 code: 2,
                 userInfo: [NSLocalizedDescriptionKey: "Unable to read the selected folder."]
             )
@@ -1211,7 +1286,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             let size = values.fileSize ?? 0
             guard size <= maximumPickedDirectoryEntryBytes else {
                 throw NSError(
-                    domain: "com.baimoqilin.aether.file-picker",
+                    domain: "com.kira.ditto.file-picker",
                     code: 3,
                     userInfo: [NSLocalizedDescriptionKey: "A file in the selected folder is too large: \(relativePath)"]
                 )
@@ -1219,7 +1294,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             files.append((fileURL, relativePath, size))
             guard files.count <= maximumPickedDirectoryEntries else {
                 throw NSError(
-                    domain: "com.baimoqilin.aether.file-picker",
+                    domain: "com.kira.ditto.file-picker",
                     code: 4,
                     userInfo: [NSLocalizedDescriptionKey: "The selected folder contains too many files."]
                 )
@@ -1227,7 +1302,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             totalBytes += size
             guard totalBytes <= maximumPickedDirectoryBytes else {
                 throw NSError(
-                    domain: "com.baimoqilin.aether.file-picker",
+                    domain: "com.kira.ditto.file-picker",
                     code: 5,
                     userInfo: [NSLocalizedDescriptionKey: "The selected folder is too large."]
                 )
@@ -1239,7 +1314,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
             let data = try Data(contentsOf: file.url, options: .mappedIfSafe)
             guard data.count <= maximumPickedDirectoryEntryBytes else {
                 throw NSError(
-                    domain: "com.baimoqilin.aether.file-picker",
+                    domain: "com.kira.ditto.file-picker",
                     code: 3,
                     userInfo: [NSLocalizedDescriptionKey: "A file in the selected folder is too large: \(file.relativePath)"]
                 )
@@ -1314,7 +1389,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
     }
 
     private func alpineRuntimeRootURL() throws -> URL {
-        if let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.baimoqilin.aether") {
+        if let container = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.com.kira.ditto") {
             return container.appendingPathComponent("AetherAlpine", isDirectory: true)
         }
         let applicationSupport = try FileManager.default.url(
@@ -1346,7 +1421,7 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
         guard FileManager.default.fileExists(atPath: marker.path) else { return }
         guard !runtime.isInitialized else {
             throw NSError(
-                domain: "com.baimoqilin.aether.runtime-host",
+                domain: "com.kira.ditto.runtime-host",
                 code: 2,
                 userInfo: [NSLocalizedDescriptionKey: "Restart Aether to finish resetting Alpine."]
             )
@@ -1381,51 +1456,6 @@ final class AetherRuntimeHost: NSObject, NativeRuntimeHost, UIDocumentPickerDele
         let dependencies = support.appendingPathComponent("ChromiumDependencies", isDirectory: true)
         try FileManager.default.createDirectory(at: dependencies, withIntermediateDirectories: true)
         return dependencies
-    }
-
-    private func installBridgeAsset() throws {
-        try guestCreateDirectories("/root/.aether/pi-bridge")
-        try installBridgeAsset(
-            resource: "bridge",
-            guestName: "bridge.mjs",
-            markerName: ".bridge.sha256"
-        )
-        try installBridgeAsset(
-            resource: "extension-bridge",
-            guestName: "extension-bridge.mjs",
-            markerName: ".extension-bridge.sha256"
-        )
-    }
-
-    private func installBridgeAsset(
-        resource: String,
-        guestName: String,
-        markerName: String
-    ) throws {
-        guard let source = Bundle.main.url(forResource: resource, withExtension: "mjs") else {
-            throw RuntimeHostError.operationFailed("Bundled \(resource) is missing.")
-        }
-        let bytes = try Data(contentsOf: source)
-        let fingerprint = SHA256.hash(data: bytes)
-            .map { String(format: "%02x", $0) }
-            .joined()
-        let bridgePath = "/root/.aether/pi-bridge/\(guestName)"
-        let markerPath = "/root/.aether/pi-bridge/\(markerName)"
-        if runtime.fileExists(bridgePath),
-           let marker = try? runtime.readFile(markerPath),
-           String(data: marker, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines) == fingerprint {
-            return
-        }
-        try runtime.writeFile(
-            bridgePath,
-            data: bytes,
-            executable: false
-        )
-        try runtime.writeFile(
-            markerPath,
-            data: Data("\(fingerprint)\n".utf8),
-            executable: false
-        )
     }
 
     private func installPreinstalledExtensions() throws {
@@ -1565,11 +1595,11 @@ private final class AetherBackgroundExecutionCoordinator {
     private var lastProgressAdvance = Date.distantPast
 
     private var taskIdentifierPrefix: String {
-        "\(Bundle.main.bundleIdentifier ?? "com.baimoqilin.aether").agent"
+        "\(Bundle.main.bundleIdentifier ?? "com.kira.ditto").agent"
     }
 
     func register() {
-        onMainSync {
+        onMain {
             guard #available(iOS 26.0, *) else { return }
             if UIApplication.shared.backgroundRefreshStatus != .available {
                 NSLog("Aether background refresh is unavailable (status: %ld)",
@@ -1579,16 +1609,16 @@ private final class AetherBackgroundExecutionCoordinator {
     }
 
     func begin(name: String, onExpired: @escaping () -> Void) -> String {
-        onMainSync {
-            let identifier = UUID().uuidString
-            leases[identifier] = Lease(name: name, onExpired: onExpired, detail: "Starting")
-            pendingCompletionSuccess = nil
-            ensureBriefBackgroundTask(name: name)
+        let identifier = UUID().uuidString
+        onMain {
+            self.leases[identifier] = Lease(name: name, onExpired: onExpired, detail: "Starting")
+            self.pendingCompletionSuccess = nil
+            self.ensureBriefBackgroundTask(name: name)
             if #available(iOS 26.0, *) {
-                ensureContinuedProcessingTask(name: name)
+                self.ensureContinuedProcessingTask(name: name)
             }
-            return identifier
         }
+        return identifier
     }
 
     func update(identifier: String, detail: String) {
@@ -1785,13 +1815,6 @@ private final class AetherBackgroundExecutionCoordinator {
         } else {
             DispatchQueue.main.async(execute: operation)
         }
-    }
-
-    private func onMainSync<T>(_ operation: () -> T) -> T {
-        if Thread.isMainThread {
-            return operation()
-        }
-        return DispatchQueue.main.sync(execute: operation)
     }
 }
 

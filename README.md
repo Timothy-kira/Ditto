@@ -108,9 +108,12 @@ Agent 可以像人一样操作手机上的任意 App——点击、滑动、输�
 
 演示（点击播放）：
 
-![高德地图 MCP 演示](docs/assets/demo-amap-mcp.mp4)
-
-![Spotify MCP 演示](docs/assets/demo-spotify-mcp.mp4)
+<table>
+<tr>
+<td width="50%"><video src="https://github.com/Timothy-kira/Ditto/raw/main/docs/assets/demo-amap-mcp.mp4" width="360" controls muted playsinline></video><br>高德地图 MCP 演示</td>
+<td width="50%"><video src="https://github.com/Timothy-kira/Ditto/raw/main/docs/assets/demo-spotify-mcp.mp4" width="360" controls muted playsinline></video><br>Spotify MCP 演示</td>
+</tr>
+</table>
 
 <div align="center">
 <img src="docs/assets/gmail-mcp.jpg" width="360" alt="Gmail MCP：一句话创建求职投递邮件草稿">

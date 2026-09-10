@@ -106,12 +106,12 @@ Agent 可以像人一样操作手机上的任意 App——点击、滑动、输�
 | `phone_app` | 已验证 GUI 流程宏的召回与回放 |
 | `webmcp` | 浏览器控制 38 个工具（见 AI Browser） |
 
-演示（点击播放）：
+演示：
 
 <table>
 <tr>
-<td width="50%"><video src="https://github.com/Timothy-kira/Ditto/raw/main/docs/assets/demo-amap-mcp.mp4" width="360" controls muted playsinline></video><br>高德地图 MCP 演示</td>
-<td width="50%"><video src="https://github.com/Timothy-kira/Ditto/raw/main/docs/assets/demo-spotify-mcp.mp4" width="360" controls muted playsinline></video><br>Spotify MCP 演示</td>
+<td width="50%"><img src="docs/assets/demo-amap-mcp.gif" width="270" alt="高德地图 MCP 演示：一句话查附近火锅店"><br>高德地图 MCP 演示</td>
+<td width="50%"><img src="docs/assets/demo-spotify-mcp.gif" width="270" alt="Spotify MCP 演示：对话内控制音乐播放"><br>Spotify MCP 演示</td>
 </tr>
 </table>
 

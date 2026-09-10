@@ -1,4 +1,4 @@
-# Kimi Code Mobile
+# Ditto
 
 把官方 Kimi Code CLI 完整运行在 Android 与 iOS 本地环境中的非官方移动端容器。
 

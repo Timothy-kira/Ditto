@@ -1,4 +1,4 @@
-# Kimi Code Mobile
+# Ditto
 
 An unofficial mobile container that runs the official Kimi Code CLI locally on Android and iOS.
 

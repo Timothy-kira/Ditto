@@ -69,6 +69,5 @@ pi-bridge/session-*.jsonl
 # Device diagnostic pulls — real chat DBs, crash logs, session payloads
 /_diag_pull/
 
-# Research / diagnostic write-ups — local only (keep the upstream extensions doc)
-/docs/*
-!/docs/AETHER_EXTENSIONS.md
+# Research / diagnostic write-ups — local only
+/docs/

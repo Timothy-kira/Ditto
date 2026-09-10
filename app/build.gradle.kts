@@ -414,13 +414,6 @@ composeCompiler {
     metricsDestination = layout.buildDirectory.dir("compose-metrics")
 }
 
-baselineProfile {
-    // Regeneration is an explicit, opt-in step; day-to-day builds must not spin up an
-    // emulator. The checked-in profile under src/main/generated is what ships.
-    automaticGenerationDuringBuild = false
-    saveInSrc = true
-}
-
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
     arg("room.incremental", "true")
@@ -509,7 +502,6 @@ dependencies {
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)
     androidTestImplementation(libs.androidx.test.ext.junit)
-    baselineProfile(project(":baselineprofile"))
 }
 
 tasks.withType<PostHogCliExecTask>().configureEach {
